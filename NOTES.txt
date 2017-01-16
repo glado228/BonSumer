@@ -1,0 +1,27 @@
+
+
+Logging configuration takes place in Illuminate\Foundation\Bootstrap\ConfigureLogging, depending on the value of config('app.log')
+
+For example, for "app.log = single", the following method will be called:
+
+	ConfigureLogging::configureSingleHandler()
+
+which calls:
+
+	Illuminate\Log\Writer::useFiles("path to log file", "debug_levet" = "debug")
+
+(Illuminate\Log\Writer is essentailly a wrapper around a Monolog\Logger instance)
+
+this pushes a new hanlder (in this case a StreamHandler instance) on top of the stack of available handlers
+in the Monolog\Logger instance
+
+When the application logs a message, this will end up being processed by:
+
+	Monolog\Logger::addRecord()
+
+which invokes all handlers that declare to accept the message (based on the handler's isHandling method) until one of them returns true. After that, no further handlers are ivoked for this message
+
+
+
+
+

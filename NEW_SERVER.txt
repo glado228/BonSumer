@@ -1,0 +1,258 @@
+NEW SERVER
+
+apt-get update
+
+
+[MYSQL]
+# reinstall MySQL
+apt-get remove mysql-server*
+
+rm -f /var/lib/mysql  # otherwise user names and configuration from a previous installation will not be deleted
+# during installation you will be asked to enter the root password
+
+apt-get install mysql-server
+
+# remove remote root access:
+delete from user where user='root' and host not in (localhost, 12.0.0.1 etc..);
+
+create database bonsum;
+create user bonsum@'localhost' identified by '<bonsum_sql_password>'
+# create other bonsum users if you are planning to connect from other hosts, replacing
+# localhost with other hostnames
+grant all on bonsum.* to bonsum
+
+# check your iptable setup and, if needed, add an iptable rule to allow incoming mysql connections:
+iptables -I INPUT {line number in INPUT chain} -s h2427251.stratoserver.net -p tcp --destination-port mysql -j ACCEPT
+iptables-save
+
+use the bind-address option in /etc/mysql/my.conf to allow external mysql connections
+
+create a backup user:
+create user bonsum identified by '<backup_sql_password>'
+grant select, lock tables on *.* to 'backup'@'localhost';
+
+# install automysqlbackup
+apt-get install automysqlbackup
+
+# edit /etc/default/automysqlbackup/default
+USERNAME=backup
+PASSWORD=backup_sql_password
+DBNAMES=bonsum
+BACKUPDIR=/backup/mysql
+
+# add automysqlbackup in /etc/cron.daily with this content (it it's not already there):
+
+#!/bin/sh
+test -x /usr/sbin/automysqlbackup || exit 0
+/usr/sbin/automysqlbackup
+
+and make it executable
+
+
+
+[MONGODB]
+
+# Follow these instructions to install v3: http://tecadmin.net/install-mongodb-on-ubuntu/
+
+# Crate the root user:
+mongo --authenticationDatabase admin
+use admin
+db.createUser({ 'user': 'root', 'pwd': '<mongo_root_password>', roles: [ {'role':'root', db:'admin'}]})
+db.createUser({ 'user': 'backup', 'pwd': '<mongo_backup_password>', roles: [ {'role':'root', db:'admin'}]})
+use bonsum
+db.createUser({ 'user': 'bonsum', 'pwd': '<mongo_bonsum_password>', roles: [ {'role':'readWrite', db:'bonsum'}]})
+
+# enable security in /etc/mongod.conf
+auth = true
+
+# harden your firewall rules:
+iptables -I INPUT  {somewhere in input chain} -p tcp --dport 27017 -j DROP
+iptables -I INPUT 17 -s {trusted host} -p tcp --dport 27017 -j ACCEPT
+iptables-save
+
+# restart mongod
+service mongod restart
+
+# copy:
+https://github.com/micahwedemeyer/automongobackup/blob/master/src/automongobackup.sh
+to /usr/sbin/
+and modify:
+DBUSERNAME=backup
+DBPASSWORD=<mongo_backup_password>
+DBAUTHDB=admin
+BACKUPDIR=/backup/mongodb
+
+# addd automongbackup in /etc/cron.daily with this content:
+
+#! /bin/sh
+/usr/sbin/automongobackup 1>>/private-backup/mongodb/backup.log
+
+and make it readable
+
+
+[LARAVEL FRAMEWORK]
+
+apt-get install git
+# create id_rsa for user user and add it to bitbucket
+clone repository
+git clone git@bitbucket.org:bonsum-team/bonsum.git
+apt-get install npm
+download composer: https://getcomposer.org/composer.phar
+
+apt-get install php5-mcrypt
+php5enmod mcrypt
+
+as user:
+php composer.phar install
+npm install
+
+as root:
+npm install -g gulp
+ln -s /usr/bin/nodejs /usr/bin/node
+gulp
+
+set up .env
+and chmod go-w g+r .env
+chown user:www-data .env
+chown -R user:www-data storage
+chmod -R g+w storage
+chmod g+s storage/logs
+# the latter command sets the setgid bit on logs, so all logs created will belong to the www-data group
+# useful becauso logs are shared by NGINX and the command line artisan
+
+# MySQL and MONGO PHP extensions:
+apt-get php5-mysql
+php5enmod mysql
+apt-get install php-pear (to get pecl)
+apt-get install php5-dev  (to get phpize)
+pecl install mongo
+add mongo.ini to /etc/php5/mods-available with the following content:
+extension = mongo.so
+php5enmod mongo
+
+
+
+php migrate install
+
+# add user to www-data group:
+usermod -a -G www-data user
+
+
+
+[NGINX]
+
+service apache2 stop
+
+# reinstall nginx
+apt-get remove nginx
+apt-get install nginx
+
+set up
+/etc/nginx/sites-available/bonsum:
+
+server {
+
+       listen 80;
+       root /home/user/bonsum/public;
+
+       access_log      /var/log/nginx/bonsum.access.log;
+       error_log       /var/log/nginx/bonsum.error.log;
+
+#       listen 443 ssl;
+#       server_name h2427251.stratoserver.net;
+
+       location / {
+              index index.html index.htm index.php;
+              try_files $uri $uri/ /index.php?$query_string;
+       }
+
+       location /index.php {
+                  fastcgi_split_path_info       ^(.+\.php)(.*)$;
+
+                  include /etc/nginx/fastcgi_params;
+        }
+
+       location ~ /\. {
+                access_log off;
+                log_not_found off;
+                deny all;
+       }
+}
+
+# install FastCGI Process Manager for PHP:
+apt-get php5-fpm
+
+add:
+
+fastcgi_pass  unix:/var/run/php5-fpm.sock;
+fastcgi_index index.php;
+
+on top of:
+
+/etc/nginx/fastcgi_params
+
+create /etc/nginx/conf.d/ssl.conf:
+
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+ssl_prefer_server_ciphers on;
+ssl_session_cache shared:SSL:10m;
+ssl_certificate /etc/nginx/ssl/nginx.crt;
+ssl_certificate_key /etc/nginx/ssl/nginx.key;
+ssl_dhparam /etc/nginx/ssl/dhparam.pem;
+
+[BEANSTALK]
+apt-get install beanstalk
+
+install the beanstalk console:
+
+https://github.com/ptrofimov/beanstalk_console
+
+creat /etc/nginx/sites-availabl/beanstalk_console:
+server {
+
+       listen 127.0.0.1:8081;
+       root /home/user/beanstalk_console/public;
+
+       location / {
+              index index.html index.htm index.php;
+              try_files $uri $uri/ /index.php?$query_string;
+       }
+
+       location ~ \.php$ {
+                try_files $uri =404;
+                  fastcgi_split_path_info       ^(.+\.php)(.*)$;
+
+                  include /etc/nginx/fastcgi_params;
+
+        }
+}
+
+
+[SUPERVISOR]
+
+apt-get install supervisor
+
+append to /etc/supervisor/supervisord.conf
+
+[inet_http_server]
+port=127.0.0.1:9001
+; you can control supervisor via web interface from here
+
+[program:laravelq]
+user=www-data
+command=php artisan queue:listen --queue=bonsum --tries=3 --timeout=300 --delay=30
+directory=/home/user/bonsum
+stdout_logfile=/home/user/bonsum/storage/logs/supervisor_queue.log
+redirect_stderr=true
+autostart=true
+autorestart=true
+
+[program:beanstalkd]
+user=user
+command=/usr/bin/beanstalkd -l 127.0.0.1
+stdout_logfile=/var/log/beanstalkd.log
+redirect_stderr=true
+autostart=true
+autorestart=true
+

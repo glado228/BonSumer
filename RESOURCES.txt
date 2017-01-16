@@ -1,0 +1,39 @@
+
+1) Javascript.
+
+we use NPM for dependency management and browserify to create bundles that contain all the Javascript libraries and modules needed by the application. Our custom modules are stored under resources/js/ng-modules/ while the entry points for the libraries are stored in resources/js/third-party/<directory named after the library>/index.js.
+JS libraries that are not available in NPM, or are not available in the correct version, are stored directly under resources/js/third-party/<directory named after the library>/ together with the corresponding index.js entry point.
+In both cases, the index.js acts as the entry point for the corresponding CommonJS module and these entry points, as well as the global libraries, such as angular or jquery, are specified in the file package.json under the "browser" section.
+
+Take a look at resources/js/angular-responsive/index.js and resources/js/angular-ng-tagsinput/index.js for examples.
+
+There are 2 browserify entry points: resources/js/bonsumApp.js and resources/js/bonsumAdminApp.js, for the normal JS bundle and for the admin bundle loaded when the user is logged-in as admin, respectively.The admin pages use additional JS modules, among others jquery, which we don't want to import for the non-admin pages because they are not needed/desired.
+
+If you take a look at bonsumApp.js you should be able to understand how the CommonJS modules are imported and used in our angular app.
+
+
+2) CSS/LESS
+
+We compile our css using less. Similarly to the javascript resources, there are 2 bundles that will be compiled, one for admins and one for normal users. The respective entry points are resources/less/main-admin.less and resources/less/main.less. Bootstrap is also compiled as part of the 2 bundles.
+
+
+3) Language resources
+
+The Laravel language resource files are located under resources/lang. To use these resources in a page we use the macro LR() (defined in app/Helpers/Resources.php). This Macro is a wrapper around the Laravel trans() function that adds some angular markup to the resource if the page is loaded in admin mode. This angualr markup makes it possible to edit the language resource in place and save the new value. See the "Bonsum admin bar", which appears on the top of  any page when you are logged in as admin. In general, use LR() in your HTML markup to import a localized string.
+However, use the normal trans() Laravel function if the localized string appears as an argument for an HTML attribute
+(e.g <div title="{{ trans('home.title') }}"> and NOT <div title="{!! LR('home.title') !!}">), because using LR in this case would break the HTML.
+
+
+4) Passing variables to the JS frontend
+
+We use a frontend service defined in app/Services/Frontend. The method addVars() makes it possible to pass variables to the JS frontend directly from a controller. These variables will be available under the bonsumData object.
+
+
+5) Gulp
+
+The main gulp tasks are:
+
+gulp 							- build all resources, JS and CSS
+gulp watch 						- build all resources and rebuild upon changes
+clean:all clean:js clean:css 	- clean up everything, only JS, only CSS, respectively
+

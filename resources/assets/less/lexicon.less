@@ -1,0 +1,133 @@
+.lexicon-section {
+  .position-relative();
+
+  .lexicon-search {
+    input {
+      .parent-top-right();
+      display: block;
+      padding: 0px;
+      padding-left: 4px !important;
+      width: 195px !important;
+      height: 24px !important;
+      outline: none;
+      border: none;
+      background-color: #EBEBEB !important;
+    }
+
+    img {
+      .position-relative();
+    }
+  }
+
+  .lexicon-toggle-buttons {
+    margin-top: 12px;
+
+    div {
+      display: inline-block;
+      padding: 8px 12px;
+      color: #000000;
+      font-weight: 300;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    span {
+      color: #000000;
+      font-weight: 300;
+      font-size: 33px;
+    }
+  }
+
+  .lexicon-list {
+    padding: 0;
+    list-style: none;
+
+    * {
+      color: black;
+    }
+
+    & > li {
+      padding-bottom: 18px;
+    }
+
+    img {
+      max-width: 100%;
+      width: 150px;
+      height: auto;
+      border-radius: 2px;
+    }
+
+    .lexicon-category-title {
+      margin: 0px;
+      padding: 6px 4px 26px;
+      background: none;
+      color: #000000;
+      text-align: center;
+      font-weight: lighter;
+      font-size: 20px;
+    }
+
+    .panel {
+      margin-bottom: 10px;
+    }
+
+    .panel, .panel-heading {
+      border: none;
+      border-radius: 0;
+    }
+
+    .panel-heading {
+      margin: 2px;
+      padding: 0;
+      height: 40px;
+      background-color: #CCCCCC;
+
+      &:hover {
+        background-color: white;
+      }
+
+      &:before {
+        float: left;
+        margin: 0 20px 0 10px;
+        padding: 4px 6px 5px;
+        width: 30px;
+        height: 40px;
+        content: '\25B6';
+        vertical-align: initial;
+        font-size: 14px;
+        line-height: 30px;
+      }
+
+      .panel-title {
+        height: 30px;
+        line-height: 28px;
+
+        a {
+          display: block;
+          overflow: hidden;
+          padding: 5px;
+          text-decoration: none;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 14px;
+          font-family: sans-serif;
+        }
+      }
+    }
+
+    .panel-body {
+      border: none !important;
+      font-size: 13px;
+      line-height: 1.5em;
+
+      p {
+        margin: 0;
+      }
+
+      ul {
+        list-style-type: disc;
+        font-weight: 300;
+      }
+    }
+  }
+}

@@ -1,0 +1,175 @@
+
+
+Apache Virtual Host (example:
+
+<VirtualHost *:8000>
+
+	     #ServerAdmin someone@bonsum.de
+	     DocumentRoot /home/user/staging/public
+
+	     <Directory "/home/user/staging/public">
+		     Options FollowSymLinks MultiViews
+	     	     AllowOverride all
+		     Require all granted
+	     </Directory>
+
+	     ErrorLog ${APACHE_LOG_DIR}/bonsum-staging-error.log
+	     CustomLog ${APACHE_LOG_DIR}/bonsum-staging-access.log combined
+
+</VirtualHost>
+
+NGINX (example):
+
+server {
+
+       listen 8000;
+       root /home/user/staging/public;
+
+       access_log      /var/log/nginx/bonsum-staging.access.log;
+       error_log       /var/log/nginx/bonsum-staging.error.log;
+
+       location / {
+              index index.html index.htm index.php;
+              try_files $uri $uri/ /index.php?$query_string;
+       }
+
+       location /index.php {
+                  fastcgi_split_path_info       ^(.+\.php)(.*)$;
+
+                  include /etc/nginx/fastcgi_params;
+        }
+
+       location ~ /\. {
+                access_log off;
+                log_not_found off;
+                deny all;
+       }
+}
+
+
+
+Supervisor:
+
+[inet_http_server]
+port=127.0.0.1:9001 # you can control supervisor via web interface from here
+
+[program:laravelq-staging]
+user=user
+command=php artisan queue:listen --queue=bonsum-staging --tries=3 --timeout=300 --delay=30
+directory=/home/user/staging
+stdout_logfile=/home/user/staging/storage/logs/supervisor_queue.log
+redirect_stderr=true
+autostart=true
+autorestart=true
+
+[program:beanstalkd]
+user=user
+command=/usr/bin/beanstalkd -l 127.0.0.1
+stdout_logfile=/var/log/beanstalkd.log
+redirect_stderr=true
+autostart=true
+autorestart=true
+
+To monitor beanstalk queues this PHP application comes in handy:
+https://github.com/ptrofimov/beanstalk_console
+
+
+
+[LOGS DIRECTORY]
+
+make the directory group www-data and set the group sticky bit on the directory
+so that all new files will get the www-data group set. This avoids permission problems
+when both www-data and user are creating files
+
+[MONGODB]
+
+The standard Ubuntu repositories don't seem to have version 3
+Here's how to install it:
+
+http://tecadmin.net/install-mongodb-on-ubuntu/
+
+Similarly, you need to install a PHP driver compatible with version 3
+
+Eeasiest way is through PECL (pecl install...)
+
+
+[SEAFILE]
+
+Seafile:
+./seafile.sh start
+Seafile listens on port 8082 for raw file operations
+
+Seafuse:
+The read-only fuse filesystem needs to be started like this:
+./seaf-fuse.sh start /home/user/bonsum/seafiles
+
+Seahub:
+./seahub.sh start-fastcgi 8001
+Seahub is the Web interface to Seafile. Its Fast-CGI server listens on port 8001.
+
+
+The user-facing web endpoint listens on port 8002:
+
+server {
+
+    listen 8002 ssl;
+    server_name h2427251.stratoserver.net;
+
+    proxy_set_header X-Forwarded-For $remote_addr;
+
+    location / {
+              index index.html index.htm index.php;
+
+        fastcgi_pass    127.0.0.1:8001;
+
+        fastcgi_param   SCRIPT_FILENAME     $document_root$fastcgi_script_name;
+        fastcgi_param   PATH_INFO           $fastcgi_script_name;
+
+        fastcgi_param    SERVER_PROTOCOL        $server_protocol;
+        fastcgi_param   QUERY_STRING        $query_string;
+        fastcgi_param   REQUEST_METHOD      $request_method;
+        fastcgi_param   CONTENT_TYPE        $content_type;
+        fastcgi_param   CONTENT_LENGTH      $content_length;
+        fastcgi_param    SERVER_ADDR         $server_addr;
+        fastcgi_param    SERVER_PORT         $server_port;
+        fastcgi_param    SERVER_NAME         $server_name;
+        fastcgi_param   REMOTE_ADDR         $remote_addr;
+
+        access_log      /var/log/nginx/seahub.access.log;
+        error_log       /var/log/nginx/seahub.error.log;
+    }
+
+    location /seafhttp {
+        rewrite ^/seafhttp(.*)$ $1 break;
+        proxy_pass http://127.0.0.1:8082;
+        client_max_body_size 0;
+        proxy_connect_timeout  36000s;
+        proxy_read_timeout  36000s;
+    }
+
+    location /media {
+        root /home/user/bonsum/seafile-server-current/seahub;
+    }
+}
+
+Make sure both seahub and seafile are bound to local ports:
+
+seafile-data/seafile.conf:
+
+[fileserver]
+port = 8082
+host = 127.0.0.1
+
+seahub should listen to a local port (127.0.0.1:8001) by default. Check if this is the case.
+
+
+
+This endpoint needs to be configured in ccnet/ccnet.conf:
+
+SERVICE_URL = http://h2427251.stratoserver.net:8002
+
+While the proxy passthrough option to Seafile needs to be configured in seahub_settings.py:
+
+FILE_SERVER_ROOT = 'http://h2427251.stratoserver.net:8002/seafhttp'
+
+

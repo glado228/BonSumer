@@ -1,0 +1,97 @@
+.filter-box {
+	.checkbox label {
+		padding-left: 0;
+		img {
+			vertical-align: middle;
+			margin-top: -2px;
+		}
+	}
+
+	.checkbox input[type=checkbox] {
+		//visibility:hidden creates problems,
+		//so we reduce size to zero and make transparent
+		width: 0;
+		margin: 0;
+		opacity: 0;
+	}
+
+	.categories-select {
+		& > div {
+			display: -webkit-flex;
+			display: -ms-flex;
+			display: flex;
+			-webkit-justify-content: space-between;
+			-ms-justify-content: space-between;
+			justify-content: space-between;
+		}
+
+		img {
+			@media (min-width: 993px) {
+				width: 62px;
+				height: auto;
+				max-width: 100%;
+			}
+			margin: 0;
+		}
+
+		.checkbox + .popover {
+			padding: 2px;
+			.popover-content {
+				height: 42px;
+				max-width: 100px;
+				line-height: 1.2;
+				font-size: 12px;
+				padding: 0 8px;
+			}
+		}
+	}
+}
+
+
+.shop-stub {
+	margin: 0px 0px 30px;
+	height: 382px;
+	border: 1px solid #CCCCCC;
+}
+
+
+.reward-button {
+	background-color: #B5DB7A;
+	color: black;
+	opacity: 1 !important;
+}
+
+
+.criteria-icon {
+	width: 30px;
+}
+
+.to-the-shop-button {
+	position: relative;
+	top: 15px;
+	color: #ffffff;
+	background-color: #382409;
+	&:hover {
+		color: #333333;
+		background-color: #ffffff;
+		border: 1px solid #382409;
+	};
+}
+
+.shop-thumbnail {
+	height: 174px;
+}
+
+.shop-description {
+	overflow: hidden;
+	font-size: 15px;
+	height: 84px;
+	margin: 20px 0px 6px;
+	padding: 0px 10px 20px;
+}
+
+.shop-container {
+	position: relative;
+}
+
+

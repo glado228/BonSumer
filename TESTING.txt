@@ -1,0 +1,117 @@
+These instructions will lead you through the setup of a development instance. This instance can be used for develpment and testing.
+
+Requirements (you need to install this software for the development instance to work):
+
+- PHP composer
+- Node.js
+- NPM (node package manager)
+- MySQL or SQLite
+- MongoDB
+
+
+How you do it:
+
+1) "cd" into the folder of the file you are currently reading (the git repository main folder).
+
+2) run composer to install all PHP dependencies:
+
+php <PATH_TO_YOUR_COMPOSER_SCRIPT> install
+
+PLEASE NOTE: composer sometimes rate limits anonymous users when downloading a large number of files.
+Therefore, during the installation process you might be prompted for a GitHub account. Just enter your
+GitHub credentials to continue the installation. Any account will do.
+
+
+3) run NPM to install all the Node.js stuff:
+
+npm update
+
+
+4) Install gulp (if not already installed):
+
+npm install --global gulp
+
+5) Create an emtpy manifest.json file:
+
+
+echo '{}' > resources/manifest.json
+
+
+6) Run gulp to compile CSS, Javascript and other resoruces
+
+gulp
+
+
+7) If you want to use SQLite instead of MySQL, change the database settings to use sqlite. To do so, open "config/database.php" and
+replace the line containing:
+
+ 'default' => 'mysql',
+
+ with:
+
+  'default' => 'sqlite',
+
+And, if you are using MySQL, you will need to specify the credentials:
+
+DB_HOST=				the host where the database is running, most likely "localhost"
+DB_DATABASE=			the name of the database
+DB_USERNAME=			the username
+DB_PASSWORD=			the password
+
+
+8) Run the following command to create an empty configuration file:
+
+cp .env.example .env
+
+9) Install monbgodb and the mongodb PHP driver if they are not already installed.
+
+ a) Install the database. How to do it depends on your platform, take a look here: http://docs.mongodb.org/manual/installation/ for plarform-specific instructions.
+
+ b) Install the PHP driver: http://docs.mongodb.org/ecosystem/drivers/php/
+
+ c) Update the environment variables in .env with the MongoDB credentials:
+
+MONGO_HOST=				the host where the database is running, most likely "localhost"
+MONGO_DATABASE=			the name of the database
+MONGO_USERNAME=			the username
+MONGO_PASSWORD=			the password
+
+10) Fill the databases with the tables we need:
+
+php artisan migrate
+
+NOTE: if you are using SQLite and it complains about the storage/database.sqlite file not being readable or not containing a valid database, try to replace storage/database.sqlite with an empty file.
+
+11) Fill the newly-created tables with test data:
+
+php artisan db:seed
+
+This will create 2 testing user accounts: test@test.com (with admin rights) and noadmin@test.com (ordinary user with no admin rights). The password for both accounts is 'test'.
+
+12) Almost done! Now start the development server:
+
+php artisan serve
+
+The application should now be reachable from the browser at http://localhost:8000/
+
+
+NOTE: There is a test account you can use if you need to log in:
+
+With admin rights:
+Username: test@test.com
+Password: test
+
+Ordinary user without admin rights:
+Username: noadmin@test.com
+Password: test
+
+
+ONLY FOR ADMIN MODE:
+
+13) To enable CKEDITOR media embded plugin (we use the plugin to edit content in admin mode), you will have to download the plugin's zip archive from here:
+
+http://ckeditor.com/addon/oembed
+
+and unzip its content into vendor/ckeditor/ckeditor/plugins
+
+

@@ -1,0 +1,39 @@
+.about-profile-card-section {
+	@media (min-width: 768px) {
+		display: -webkit-flex;
+		display: -ms-flex;
+		display: flex;
+		margin-top: -10px;
+		-webkit-justify-content: space-between;
+		-ms-justify-content: space-between;
+		justify-content: space-between;
+	}
+}
+
+.about-profile-card {
+	margin: 0 auto;
+	max-width: 320px;
+	text-align: left;
+	font-weight: 300;
+	img {
+		display: block;
+		margin: 0;
+		width: 100%;
+		border: 1px solid #0d0d0d;
+		border-radius: 2px;
+	}
+	p {
+		margin-bottom: 20px;
+		padding: 0;
+		text-align: left;
+	}
+
+	@media (min-width: 768px) {
+		&.card-left {
+			margin-left: 0;
+		}
+		&.card-right {
+			margin-right: 0;
+		}
+	}
+}

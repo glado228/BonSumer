@@ -1,0 +1,80 @@
+/*
+	CSS file for CMS app
+*/
+
+/*
+	fix for backdrop of bootstrap modal dialogs
+*/
+@admin-toolbar-height: 70px;
+
+.modal-backdrop {
+  bottom: 0;
+}
+
+body { padding-top: @admin-toolbar-height; }
+
+.missing-resource {
+	font-style: italic;
+	color: #800000;
+	border-style: dashed;
+	border-width: 1px;
+}
+
+.draft {
+	.editable-clickable();
+	background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    #ccc 10px,
+    #ccc 20px
+   );
+}
+
+.editable-clickable {
+	border-style: dashed;
+	border-width: 1px;
+}
+
+.highlight-content {
+	background-color: #FFFF99;
+}
+
+.navbar-danger.navbar-text {
+	color: #D14;
+}
+
+.resource-editor {
+	position: absolute;
+	width: 80%;
+	padding: 7px;
+	height: 400px;
+	z-index: 9999;
+	background-color: #F0F0F0;
+  	-webkit-border-radius: 7px;
+  	-moz-border-radius: 7px;
+ 	border-radius: 7px;
+}
+
+.text-editor {
+	background-color: #FFFFFF;
+	margin: 10px 0;
+	height: 85% !important;
+	min-height: 85% !important;
+	overflow: scroll !important;
+}
+
+.cursor-move {
+	cursor: move;
+}
+
+.bottom-space {
+	height: 420px;
+	background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    #ccc 10px,
+    #ccc 20px
+   );
+}

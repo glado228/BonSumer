@@ -1,0 +1,6 @@
+/vendor
+/node_modules
+/public/media
+/resources/manifest.json
+.env
+.DS_Store

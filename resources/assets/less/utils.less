@@ -1,0 +1,311 @@
+
+
+/*
+  Show ellipsis when placeholder overflows text input field
+ */
+input[placeholder] {
+  text-overflow: ellipsis;
+}
+
+
+/*
+inline blocks
+ */
+
+.inline-block {
+  display: inline-block;
+}
+
+/*
+  padding
+ */
+
+.no-padding {
+  padding: 0px;
+}
+
+/*
+  margins
+ */
+
+.margin-vertical-5 {
+  margin: 5px 0px;
+}
+
+.margin-vertical-15 {
+  margin: 15px 0px;
+}
+
+/*
+spacing
+ */
+.vspace-above-5 {
+  margin-top: 5px;
+}
+.vspace-above-15 {
+	margin-top: 15px;
+}
+.vspace-above-25 {
+	margin-top: 25px;
+}
+.vspace-above-45 {
+  margin-top: 45px;
+}
+.vspace-above-55 {
+  margin-top: 55px;
+}
+.vspace-above-125 {
+  margin-top: 125px;
+}
+.vspace-below-25 {
+  margin-bottom: 25px;
+}
+.vspace-below-15 {
+  margin-bottom: 15px;
+}
+/*
+paragraphs
+ */
+
+.line-height-150p {
+  line-height: 150%;
+}
+
+/*
+grey-out
+ */
+
+.greyed-out {
+  opacity: 0.6;
+}
+
+
+/*
+  responsive spacing and alignment - SM devices and larger
+ */
+@media (min-width: 768px) {
+  .text-sm-right {
+    text-align: right;
+  }
+  .text-sm-left {
+    text-align: left;
+  }
+  .text-sm-center {
+    text-align: center;
+  }
+  .vspace-sm-above-5 {
+    margin-top: 5px;
+  }
+  .vspace-sm-above-15 {
+    margin-top: 15px;
+  }
+  .vspace-sm-above-25 {
+    margin-top: 25px;
+  }
+  .vspace-sm-above-125 {
+    margin-top: 125px;
+  }
+}
+
+/*
+  responsive spacing and alignment - XS devices
+ */
+@media (max-width: 768px) {
+  .text-xs-right {
+    text-align: right;
+  }
+  .text-xs-left {
+    text-align: left;
+  }
+  .text-xs-center {
+    text-align: center;
+  }
+  .vspace-xs-below-5 {
+    margin-bottom: 5px;
+  }
+  .vspace-xs-below-15 {
+    margin-bottom: 15px;
+  }
+  .vspace-xs-below-25 {
+    margin-bottom: 25px;
+  }
+  .vspace-xs-above-5 {
+    margin-top: 5px;
+  }
+  .vspace-xs-above-15 {
+    margin-top: 15px;
+  }
+  .vspace-xs-above-25 {
+    margin-top: 25px;
+  }
+  .vspace-xs-above-125 {
+    margin-top: 125px;
+  }
+  .btn-xs-block {
+    .btn-block()
+  }
+}
+/*
+  backgrounds
+ */
+
+.semitransparent-white-background {
+  background-color:rgba(256, 256, 256, 0.60) !important
+}
+
+.bonsum-background-image {
+  background-image: url('/media/img/sustainable_shopping.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+
+
+.highlighted-left-slide {
+
+  background-image: -webkit-linear-gradient(left top, rgba(0,0,0,0.0001), rgba(0,0,0,0.25), rgba(0,0,0,0.0001));
+  background-image: -o-linear-gradient(bottom right, rgba(0,0,0,0.0001), rgba(0,0,0,0.25), rgba(0,0,0,0.0001));
+  background-image: -moz-linear-gradient(bottom right, rgba(0,0,0,0.0001), rgba(0,0,0,0.25), rgba(0,0,0,0.0001));
+  background-image: linear-gradient(to bottom right, rgba(0,0,0,0.0001), rgba(0,0,0,0.25), rgba(0,0,0,0.0001));
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  border-radius: 25px;
+}
+
+.highlighted-right-slide{
+
+  background: -webkit-linear-gradient(right top, rgba(0,0,0,0.0001), rgba(0,0,0,0.25), rgba(0,0,0,0.0001));
+  background: -o-linear-gradient(bottom left, rgba(0,0,0,0.0001), rgba(0,0,0,0.25), rgba(0,0,0,0.0001));
+  background: -moz-linear-gradient(bottom left, rgba(0,0,0,0.0001), rgba(0,0,0,0.25), rgba(0,0,0,0.0001));
+  background: linear-gradient(to bottom left, rgba(0,0,0,0.0001), rgba(0,0,0,0.25), rgba(0,0,0,0.0001));
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  border-radius: 25px;
+}
+
+.highlighted-central-slide {
+
+  background: -webkit-linear-gradient(top, rgba(0,0,0,0.0001), rgba(0,0,0,0.25), rgba(0,0,0,0.0001));
+  background: -o-linear-gradient(bottom, rgba(0,0,0,0.0001), rgba(0,0,0,0.25), rgba(0,0,0,0.0001));
+  background: -moz-linear-gradient(bottom, rgba(0,0,0,0.0001), rgba(0,0,0,0.25), rgba(0,0,0,0.0001));
+  background: linear-gradient(to bottom, rgba(0,0,0,0.0001), rgba(0,0,0,0.25), rgba(0,0,0,0.0001));
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  border-radius: 25px;
+}
+
+/* Gray body.
+	 Some pages like article, have a slightly gray background
+	 and they need to be wrapped in a fluid container, or else
+	 we'd hava to color the body and apply changes to all existing pages
+*/
+.container-fluid.gray-background {
+	margin-top: -20px;
+	padding-top: 20px;
+  background-color: #F7F7F7;
+}
+
+
+/*
+  positioning
+ */
+
+.position-relative {
+  position: relative;
+}
+
+.parent-top-right {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+
+.parent-top-left {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+
+/*
+  Angular tansitions
+ */
+
+@fade-interval: 0.5s;
+
+.fade-in.ng-hide-remove
+{
+  .transition(opacity @fade-interval ease-out);
+}
+.fade-out.ng-hide-add
+{
+  .transition(opacity @fade-interval ease-out);
+}
+.fade-out.ng-hide,
+.fade-in.ng-hide {
+  opacity: .0;
+}
+
+.animate-enter.ng-enter {
+  .transition(opacity @fade-interval ease-out);
+  opacity: .0;
+}
+.animate-enter.ng-enter.ng-enter-active {
+  opacity: 1.0;
+}
+
+/*
+  show on hovering
+ */
+
+.show-when-parent-hover {
+  opacity: .0;
+  .transition(opacity @fade-interval ease-out);
+}
+
+div:hover > .show-when-parent-hover {
+  z-index: 10;
+  opacity: 1.0;
+}
+
+/*
+Animate attributes
+*/
+
+.fade-in(@time) {
+  -webkit-transition: opacity @time ease-in-out;
+  -moz-transition: opacity @time ease-in-out;
+  transition: opacity @time ease-in-out;
+}
+
+.animate-color(@time) {
+  -webkit-transition: color @time ease-in-out;
+  -moz-transition: color @time ease-in-out;
+  transition: color @time ease-in-out;
+}
+
+/*
+images
+ */
+
+img {
+  margin: 0px auto;
+}
+
+.logo-image {
+  height: 25px;
+}
+
+/*
+  special definitons
+*/
+
+
+.important-field {
+  display: none;
+}
+
+

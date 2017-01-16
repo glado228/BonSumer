@@ -1,0 +1,41 @@
+TODO:
+
+
+Frotend:
+
+Article editor should have thumnail and main picture
+
+
+Backend:
+
+-Type ahead:
+
+To enable type ahead, you should build a dictionary with the frequency of words
+
+- MongoDB: language and full text index support
+http://docs.mongodb.org/manual/tutorial/specify-language-for-text-index/
+http://docs.mongodb.org/manual/administration/indexes-text/
+
+To create text indexes:
+\DB::connection('mongodb')->collection('articles')->raw()->createIndex(['tags' => 'text']) (works)
+\Schema::connection('mongodb')->collection('articles', function($c) { $c->createIndex(['title' => 'text']); } ) (ty it)
+
+How to perform text search queries:
+\Bonsum\MongoDB\Article::whereRaw(['$text' => ['$search' => 'urlaub']])->count()
+
+Affiliates:
+- Tradetracker affiliate
+- Testing SubId for Adcell (and in generally for all other network)
+
+
+- Database:
+check this out!
+Illuminate\Database\Connection::enableQueryLog()
+
+- Backup scripts
+- Monitoring (Zabbix?)
+- Log viewer
+- Caching (memcached?)
+- Automatic configuration (puppet?)
+- Stress testing
+
